@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テトリス</title>
+    <link rel="stylesheet" href="game-style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>テトリス</h1>
+
+        <div class="game-wrapper">
+            <div class="game-board" id="gameBoard"></div>
+
+            <div class="game-info">
+                <div class="score-box">
+                    <h2>スコア</h2>
+                    <p id="score">0</p>
+                </div>
+
+                <div class="level-box">
+                    <h2>レベル</h2>
+                    <p id="level">1</p>
+                </div>
+
+                <div class="lines-box">
+                    <h2>ラインクリア</h2>
+                    <p id="lines">0</p>
+                </div>
+
+                <div class="next-box">
+                    <h2>ネクスト</h2>
+                    <canvas id="nextPreview" width="120" height="120"></canvas>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn">ゲーム開始</button>
+                    <button id="pauseBtn" class="btn" disabled>一時停止</button>
+                </div>
+
+                <div class="controls">
+                    <h3>操作方法</h3>
+                    <p>← → : ブロック移動</p>
+                    <p>↓ : 下降</p>
+                    <p>Z / X : 回転</p>
+                    <p>SPACE : 高速下降</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameOver" class="game-over-modal" style="display: none;">
+            <div class="modal-content">
+                <h2>ゲームオーバー</h2>
+                <p>最終スコア: <span id="finalScore">0</span></p>
+                <p>ラインクリア: <span id="finalLines">0</span></p>
+                <button id="restartBtn" class="btn">もう一度プレイ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

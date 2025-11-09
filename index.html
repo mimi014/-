@@ -3,62 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>テトリス</title>
+    <title>テトリス - クラシックパズルゲームの決定版</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>テトリス</h1>
+    <!-- ナビゲーション -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">TETRIS</div>
+            <div class="nav-links">
+                <a href="#features">特徴</a>
+                <a href="#how-to-play">遊び方</a>
+                <a href="game.html" class="btn-play">今すぐプレイ</a>
+            </div>
+        </div>
+    </nav>
 
-        <div class="game-wrapper">
-            <div class="game-board" id="gameBoard"></div>
-
-            <div class="game-info">
-                <div class="score-box">
-                    <h2>スコア</h2>
-                    <p id="score">0</p>
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="gradient-text">クラシック</span>
+                    <br>テトリスゲーム
+                </h1>
+                <p class="hero-subtitle">
+                    時代を超えて愛される、パズルゲームの決定版。<br>
+                    ブロックを揃えて、ハイスコアを目指そう。
+                </p>
+                <div class="hero-buttons">
+                    <a href="game.html" class="btn btn-primary">ゲームを始める</a>
+                    <a href="#features" class="btn btn-secondary">もっと詳しく</a>
                 </div>
-
-                <div class="level-box">
-                    <h2>レベル</h2>
-                    <p id="level">1</p>
-                </div>
-
-                <div class="lines-box">
-                    <h2>ラインクリア</h2>
-                    <p id="lines">0</p>
-                </div>
-
-                <div class="next-box">
-                    <h2>ネクスト</h2>
-                    <canvas id="nextPreview" width="120" height="120"></canvas>
-                </div>
-
-                <div class="button-group">
-                    <button id="startBtn" class="btn">ゲーム開始</button>
-                    <button id="pauseBtn" class="btn" disabled>一時停止</button>
-                </div>
-
-                <div class="controls">
-                    <h3>操作方法</h3>
-                    <p>← → : ブロック移動</p>
-                    <p>↓ : 下降</p>
-                    <p>Z / X : 回転</p>
-                    <p>SPACE : 高速下降</p>
+            </div>
+            <div class="hero-visual">
+                <div class="tetris-blocks">
+                    <div class="block block-i"></div>
+                    <div class="block block-o"></div>
+                    <div class="block block-t"></div>
+                    <div class="block block-s"></div>
+                    <div class="block block-z"></div>
+                    <div class="block block-j"></div>
+                    <div class="block block-l"></div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div id="gameOver" class="game-over-modal" style="display: none;">
-            <div class="modal-content">
-                <h2>ゲームオーバー</h2>
-                <p>最終スコア: <span id="finalScore">0</span></p>
-                <p>ラインクリア: <span id="finalLines">0</span></p>
-                <button id="restartBtn" class="btn">もう一度プレイ</button>
+    <!-- 特徴セクション -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">ゲームの特徴</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>シンプルな操作</h3>
+                    <p>矢印キーとスペースキーだけで楽しめる、直感的な操作性。初心者でもすぐに遊べます。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>スムーズな動作</h3>
+                    <p>最適化されたゲームエンジンにより、滑らかで快適なプレイ体験を実現しています。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>スコアシステム</h3>
+                    <p>ライン消去数やレベルに応じたスコアシステムで、やりこみ要素も充実。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>美しいデザイン</h3>
+                    <p>モダンで洗練されたUIデザイン。レスポンシブ対応でどのデバイスでも快適です。</p>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <script src="game.js"></script>
+    <!-- 遊び方セクション -->
+    <section id="how-to-play" class="how-to-play">
+        <div class="container">
+            <h2 class="section-title">遊び方</h2>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <div class="key-display">← →</div>
+                    <p>ブロックを左右に移動</p>
+                </div>
+                <div class="control-item">
+                    <div class="key-display">↓</div>
+                    <p>ブロックを下に移動</p>
+                </div>
+                <div class="control-item">
+                    <div class="key-display">Z / X</div>
+                    <p>ブロックを回転</p>
+                </div>
+                <div class="control-item">
+                    <div class="key-display">SPACE</div>
+                    <p>一気に落下</p>
+                </div>
+            </div>
+            <div class="game-rules">
+                <h3>ルール</h3>
+                <ul>
+                    <li>落下してくるブロックを回転・移動させて、横一列を揃えます</li>
+                    <li>一列揃えるとその列が消えて、スコアが加算されます</li>
+                    <li>ブロックが上まで積み上がるとゲームオーバーです</li>
+                    <li>たくさんのラインを消して、ハイスコアを目指しましょう</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTAセクション -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>準備はできましたか？</h2>
+            <p>今すぐテトリスを始めて、ハイスコアに挑戦しよう</p>
+            <a href="game.html" class="btn btn-primary btn-large">ゲームを始める</a>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Tetris Game. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // スクロールアニメーション
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .control-item').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>

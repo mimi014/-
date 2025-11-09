@@ -1,0 +1,269 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+.container {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    max-width: 900px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    color: #667eea;
+}
+
+.game-wrapper {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* ゲームボード */
+.game-board {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 1px;
+    background: #1a1a1a;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    aspect-ratio: 10 / 20;
+    max-width: 400px;
+    width: 100%;
+}
+
+.block {
+    background-size: 100% 100%;
+    border: 1px solid #333;
+    border-radius: 2px;
+    transition: background-color 0.05s;
+}
+
+.block.empty {
+    background-color: #0a0a0a;
+}
+
+.block.type-I {
+    background-color: #00f0f0;
+}
+
+.block.type-O {
+    background-color: #f0f000;
+}
+
+.block.type-T {
+    background-color: #a000f0;
+}
+
+.block.type-S {
+    background-color: #00f000;
+}
+
+.block.type-Z {
+    background-color: #f00000;
+}
+
+.block.type-J {
+    background-color: #0000f0;
+}
+
+.block.type-L {
+    background-color: #f0a000;
+}
+
+.block.placed {
+    opacity: 1;
+}
+
+.block.ghost {
+    opacity: 0.3;
+}
+
+/* ゲーム情報 */
+.game-info {
+    flex: 0 0 250px;
+}
+
+.score-box,
+.level-box,
+.lines-box,
+.next-box {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.score-box h2,
+.level-box h2,
+.lines-box h2,
+.next-box h2 {
+    font-size: 0.9em;
+    color: #667eea;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.score-box p,
+.level-box p,
+.lines-box p {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+}
+
+#nextPreview {
+    display: block;
+    margin: 0 auto;
+    background-color: #1a1a1a;
+    border-radius: 5px;
+    border: 2px solid #667eea;
+}
+
+/* ボタン */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 操作方法 */
+.controls {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.controls h3 {
+    color: #667eea;
+    font-size: 0.95em;
+    margin-bottom: 10px;
+}
+
+.controls p {
+    font-size: 0.85em;
+    color: #666;
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+/* ゲームオーバーモーダル */
+.game-over-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #667eea;
+}
+
+.modal-content p {
+    font-size: 1.2em;
+    margin: 15px 0;
+    color: #333;
+}
+
+.modal-content .btn {
+    margin-top: 20px;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .game-wrapper {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .game-info {
+        flex: 1;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .container {
+        padding: 15px;
+    }
+}
