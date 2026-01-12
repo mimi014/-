@@ -22,3 +22,28 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+.pytest_cache/
+
+# アプリケーション固有
+uploads/
+outputs/
+*.mp3
+*.wav
+*.mp4
+*.pdf
+*.docx
+
+# 一時ファイル
+*.tmp
+*.log

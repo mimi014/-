@@ -1,0 +1,31 @@
+# YouTube文字起こしシステム - Python依存関係
+
+# Webフレームワーク
+Flask==3.0.0
+flask-cors==4.0.0
+
+# YouTube動画処理
+yt-dlp==2023.12.30
+
+# OpenAI API（Whisper、GPT）
+openai==1.6.1
+
+# 音声処理
+pydub==0.25.1
+
+# PDF生成
+reportlab==4.0.7
+
+# DOCX生成
+python-docx==1.1.0
+
+# その他のユーティリティ
+requests==2.31.0
+python-dotenv==1.0.0
+
+# オプション: Google Cloud Speech-to-Text
+# google-cloud-speech==2.21.0
+
+# オプション: 話者識別（高度な機能）
+# pyannote.audio==3.1.1
+# torch==2.1.2

@@ -3,62 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>テトリス</title>
+    <title>YouTube 文字起こしツール - 無料でYouTube動画を文字起こし</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>テトリス</h1>
+        <header class="header">
+            <h1>📝 YouTube 文字起こしツール</h1>
+            <p class="subtitle">AIを活用した高精度な文字起こし - 99言語以上に対応</p>
+        </header>
 
-        <div class="game-wrapper">
-            <div class="game-board" id="gameBoard"></div>
-
-            <div class="game-info">
-                <div class="score-box">
-                    <h2>スコア</h2>
-                    <p id="score">0</p>
+        <main class="main-content">
+            <!-- 入力セクション -->
+            <section class="input-section">
+                <div class="input-wrapper">
+                    <input
+                        type="text"
+                        id="youtubeUrl"
+                        class="url-input"
+                        placeholder="YouTubeのURLを入力してください (例: https://www.youtube.com/watch?v=xxxxx)"
+                    >
+                    <button id="transcribeBtn" class="btn-primary">
+                        <span class="btn-text">文字起こしを開始</span>
+                        <span class="btn-icon">▶</span>
+                    </button>
                 </div>
 
-                <div class="level-box">
-                    <h2>レベル</h2>
-                    <p id="level">1</p>
+                <div class="options-row">
+                    <div class="option-group">
+                        <label for="sourceLanguage">元の言語:</label>
+                        <select id="sourceLanguage" class="select-input">
+                            <option value="auto">自動検出</option>
+                            <option value="ja">日本語</option>
+                            <option value="en">英語</option>
+                            <option value="zh">中国語</option>
+                            <option value="ko">韓国語</option>
+                            <option value="es">スペイン語</option>
+                            <option value="fr">フランス語</option>
+                            <option value="de">ドイツ語</option>
+                        </select>
+                    </div>
+
+                    <div class="option-group">
+                        <label for="translateTo">翻訳先:</label>
+                        <select id="translateTo" class="select-input">
+                            <option value="none">翻訳なし</option>
+                            <option value="ja">日本語</option>
+                            <option value="en">英語</option>
+                            <option value="zh">中国語</option>
+                            <option value="ko">韓国語</option>
+                            <option value="es">スペイン語</option>
+                            <option value="fr">フランス語</option>
+                            <option value="de">ドイツ語</option>
+                        </select>
+                    </div>
+
+                    <div class="option-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="generateSummary">
+                            <span>要約を生成</span>
+                        </label>
+                    </div>
+
+                    <div class="option-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="speakerDetection">
+                            <span>話者識別</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 進捗セクション -->
+            <section id="progressSection" class="progress-section" style="display: none;">
+                <div class="progress-header">
+                    <h3>処理中...</h3>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p id="progressStatus" class="progress-status">準備中...</p>
+            </section>
+
+            <!-- 結果セクション -->
+            <section id="resultSection" class="result-section" style="display: none;">
+                <div class="result-header">
+                    <h2>文字起こし結果</h2>
+                    <div class="export-buttons">
+                        <button class="btn-export" id="exportTxt">
+                            <span>📄 TXT</span>
+                        </button>
+                        <button class="btn-export" id="exportPdf">
+                            <span>📕 PDF</span>
+                        </button>
+                        <button class="btn-export" id="exportDocx">
+                            <span>📘 DOCX</span>
+                        </button>
+                        <button class="btn-copy" id="copyText">
+                            <span>📋 コピー</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="lines-box">
-                    <h2>ラインクリア</h2>
-                    <p id="lines">0</p>
+                <!-- 動画情報 -->
+                <div id="videoInfo" class="video-info">
+                    <img id="videoThumbnail" class="video-thumbnail" src="" alt="Video thumbnail">
+                    <div class="video-details">
+                        <h3 id="videoTitle">動画タイトル</h3>
+                        <p class="video-meta">
+                            <span id="videoDuration">時間: --:--</span> |
+                            <span id="videoChannel">チャンネル: ---</span>
+                        </p>
+                    </div>
                 </div>
 
-                <div class="next-box">
-                    <h2>ネクスト</h2>
-                    <canvas id="nextPreview" width="120" height="120"></canvas>
+                <!-- 要約 -->
+                <div id="summarySection" class="summary-section" style="display: none;">
+                    <h3>📋 要約</h3>
+                    <div id="summaryContent" class="summary-content"></div>
                 </div>
 
-                <div class="button-group">
-                    <button id="startBtn" class="btn">ゲーム開始</button>
-                    <button id="pauseBtn" class="btn" disabled>一時停止</button>
+                <!-- 翻訳 -->
+                <div id="translationSection" class="translation-section" style="display: none;">
+                    <h3>🌐 翻訳</h3>
+                    <div id="translationContent" class="translation-content"></div>
                 </div>
 
-                <div class="controls">
-                    <h3>操作方法</h3>
-                    <p>← → : ブロック移動</p>
-                    <p>↓ : 下降</p>
-                    <p>Z / X : 回転</p>
-                    <p>SPACE : 高速下降</p>
+                <!-- 文字起こしテキスト -->
+                <div class="transcript-section">
+                    <h3>📝 文字起こしテキスト</h3>
+                    <div id="transcriptContent" class="transcript-content"></div>
                 </div>
-            </div>
-        </div>
 
-        <div id="gameOver" class="game-over-modal" style="display: none;">
-            <div class="modal-content">
-                <h2>ゲームオーバー</h2>
-                <p>最終スコア: <span id="finalScore">0</span></p>
-                <p>ラインクリア: <span id="finalLines">0</span></p>
-                <button id="restartBtn" class="btn">もう一度プレイ</button>
-            </div>
-        </div>
+                <!-- タイムスタンプ付き文字起こし -->
+                <div class="timestamp-section">
+                    <h3>⏱️ タイムスタンプ付き文字起こし</h3>
+                    <div id="timestampContent" class="timestamp-content"></div>
+                </div>
+            </section>
+
+            <!-- 機能紹介セクション -->
+            <section class="features-section">
+                <h2>主な機能</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌍</div>
+                        <h3>99言語以上対応</h3>
+                        <p>日本語、英語、中国語など、世界中の言語に対応した高精度な文字起こし</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>話者識別</h3>
+                        <p>複数の話者を自動的に検出し、誰が話しているかを識別します</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>自動要約</h3>
+                        <p>AIが文字起こしの内容を分析し、重要なポイントをまとめます</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h3>翻訳機能</h3>
+                        <p>文字起こしたテキストを134言語以上に瞬時に翻訳</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">💾</div>
+                        <h3>多様なエクスポート</h3>
+                        <p>TXT、PDF、DOCXなど、お好みの形式でダウンロード可能</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>高速処理</h3>
+                        <p>最新のAI技術により、長時間の動画も素早く文字起こし</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 YouTube文字起こしツール - Powered by AI</p>
+        </footer>
     </div>
 
-    <script src="game.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
