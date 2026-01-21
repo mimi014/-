@@ -16,13 +16,55 @@ YouTube切り抜き動画を簡単に作成するためのWebアプリケーシ�
 
 ### 1. アプリケーションを開く
 
-ブラウザで `video-creator.html` を開きます。
+#### 方法A: PCのみで使用（最も簡単）
+
+ブラウザで `video-creator.html` を直接開きます。
+
+#### 方法B: iPhoneやスマホからも使用（おすすめ）
+
+**ステップ1: サーバーを起動**
+
+PCで以下のスクリプトを実行します：
 
 ```bash
-# ローカルサーバーを起動する場合
+# macOS/Linux
+./start-server.sh
+
+# Windows
+start-server.bat
+
+# または手動でPythonサーバーを起動
 python -m http.server 8000
-# ブラウザで http://localhost:8000/video-creator.html を開く
 ```
+
+**ステップ2: アクセス**
+
+サーバー起動時に表示されるURLにアクセスします：
+
+- **PCから**: http://localhost:8000/video-creator.html
+- **iPhoneから（同じWi-Fi）**: http://[PCのIPアドレス]:8000/video-creator.html
+  - 例: http://192.168.1.100:8000/video-creator.html
+
+> **注意**: PCとiPhoneが同じWi-Fiネットワークに接続されている必要があります。
+
+#### 方法C: 外出先からもアクセス（ngrok使用）
+
+ngrokを使えば、外出先からも安全にアクセスできます：
+
+```bash
+# ngrokをインストール（初回のみ）
+# https://ngrok.com/download からダウンロード
+
+# サーバーを起動
+python -m http.server 8000
+
+# 別のターミナルでngrokを起動
+ngrok http 8000
+
+# 表示されたURLにアクセス（例: https://xxxx-xx-xxx-xxx-xx.ngrok.io）
+```
+
+> **セキュリティ注意**: ngrokで公開されたURLは誰でもアクセス可能です。使用後は必ずngrokを停止してください。
 
 ### 2. YouTube動画を読み込む
 
@@ -156,6 +198,8 @@ brew install ffmpeg
 ├── video-creator.html    # メインHTMLファイル
 ├── video-creator.css     # スタイルシート
 ├── video-creator.js      # JavaScript実装
+├── start-server.sh       # サーバー起動スクリプト (macOS/Linux)
+├── start-server.bat      # サーバー起動スクリプト (Windows)
 └── README.md            # このファイル
 ```
 
