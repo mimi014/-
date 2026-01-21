@@ -2,6 +2,10 @@
 // YouTube API Key - 実際の使用時は環境変数などで管理してください
 const YOUTUBE_API_KEY = 'YOUR_API_KEY_HERE'; // 実際のAPIキーに置き換えてください
 
+// エンディング動画のURL（Google Drive）
+const ENDING_VIDEO_GDRIVE_ID = '1cn486ZQzMqYhEA1mkw8VM8QcFf4nPJ1b';
+const ENDING_VIDEO_URL = `https://drive.google.com/uc?export=download&id=${ENDING_VIDEO_GDRIVE_ID}`;
+
 // グローバル変数
 let currentVideoId = null;
 let currentVideoDuration = 0;
@@ -287,12 +291,15 @@ function generateScript() {
 # 生成日時: ${new Date().toLocaleString('ja-JP')}
 
 VIDEO_URL="${videoUrl}"
+ENDING_VIDEO_URL="${ENDING_VIDEO_URL}"
 OUTPUT_DIR="./output"
+TEMP_DIR="./temp"
 
-# 出力ディレクトリを作成
+# ディレクトリを作成
 mkdir -p "$OUTPUT_DIR"
+mkdir -p "$TEMP_DIR"
 
-echo "動画をダウンロード中..."
+echo "元動画をダウンロード中..."
 # yt-dlpで動画をダウンロード
 yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" \\
     -o "$OUTPUT_DIR/original.mp4" \\
@@ -303,30 +310,75 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "エンディング動画をダウンロード中..."
+# Google Driveからエンディング動画をダウンロード
+# gdownを使用（pip install gdownでインストール）
+if command -v gdown &> /dev/null; then
+    gdown "$ENDING_VIDEO_URL" -O "$TEMP_DIR/ending.mp4"
+else
+    echo "警告: gdownがインストールされていません。以下のコマンドでインストールしてください:"
+    echo "pip install gdown"
+    echo "または、手動で以下のURLからエンディング動画をダウンロードして $TEMP_DIR/ending.mp4 に配置してください:"
+    echo "https://drive.google.com/file/d/${ENDING_VIDEO_GDRIVE_ID}/view"
+    exit 1
+fi
+
+if [ ! -f "$TEMP_DIR/ending.mp4" ]; then
+    echo "エラー: エンディング動画のダウンロードに失敗しました"
+    exit 1
+fi
+
 echo "クリップを作成中..."
 
 `;
 
     clips.forEach((clip, index) => {
+        const tempClipFile = `temp_clip_${index + 1}.mp4`;
         const outputFile = `clip_${index + 1}_${clip.startTime}-${clip.endTime}.mp4`;
         script += `
 # クリップ ${index + 1}: ${formatTime(clip.startTime)} - ${formatTime(clip.endTime)}
+echo "クリップ ${index + 1} を作成中..."
+
+# まず元動画からクリップを切り出し
 ffmpeg -i "$OUTPUT_DIR/original.mp4" \\
     -ss ${clip.startTime} \\
     -t ${clip.duration} \\
-    -c:v libx264 -crs 23 \\
+    -c:v libx264 -crf 23 \\
     -c:a aac -b:a 128k \\
+    -y "$TEMP_DIR/${tempClipFile}"
+
+if [ $? -ne 0 ]; then
+    echo "✗ クリップ ${index + 1} の作成に失敗しました"
+    continue
+fi
+
+# クリップとエンディング動画を結合
+echo "クリップ ${index + 1} にエンディング動画を追加中..."
+
+# concat demuxerを使用して結合
+echo "file '$TEMP_DIR/${tempClipFile}'" > "$TEMP_DIR/concat_list_${index + 1}.txt"
+echo "file '$TEMP_DIR/ending.mp4'" >> "$TEMP_DIR/concat_list_${index + 1}.txt"
+
+ffmpeg -f concat -safe 0 -i "$TEMP_DIR/concat_list_${index + 1}.txt" \\
+    -c copy \\
     -y "$OUTPUT_DIR/${outputFile}"
 
 if [ $? -eq 0 ]; then
     echo "✓ クリップ ${index + 1} を作成しました: ${outputFile}"
+    rm "$TEMP_DIR/${tempClipFile}"
+    rm "$TEMP_DIR/concat_list_${index + 1}.txt"
 else
-    echo "✗ クリップ ${index + 1} の作成に失敗しました"
+    echo "✗ クリップ ${index + 1} へのエンディング追加に失敗しました"
 fi
 `;
     });
 
     script += `
+# 一時ファイルをクリーンアップ
+echo "一時ファイルをクリーンアップ中..."
+rm -f "$TEMP_DIR/temp_clip_"*.mp4
+rm -f "$TEMP_DIR/concat_list_"*.txt
+
 echo "すべてのクリップの作成が完了しました"
 echo "出力先: $OUTPUT_DIR"
 
@@ -336,10 +388,16 @@ cat > "$OUTPUT_DIR/metadata.txt" << EOF
 説明: ${document.getElementById('clipDescription').value.trim().split('\n').join('\n')}
 チャンネル名: ${document.getElementById('yourChannelName').value.trim()}
 元動画URL: ${videoUrl}
+エンディング動画: https://drive.google.com/file/d/${ENDING_VIDEO_GDRIVE_ID}/view
 作成日時: ${new Date().toLocaleString('ja-JP')}
 EOF
 
 echo "メタデータを保存しました: $OUTPUT_DIR/metadata.txt"
+echo ""
+echo "==================================="
+echo "完了！以下のファイルが作成されました:"
+ls -lh "$OUTPUT_DIR/"*.mp4
+echo "==================================="
 `;
 
     displayOutput(script);

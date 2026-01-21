@@ -63,6 +63,9 @@ python -m http.server 8000
 # yt-dlp のインストール
 pip install yt-dlp
 
+# gdown のインストール（Google Driveからのダウンロード用）
+pip install gdown
+
 # ffmpeg のインストール (Ubuntu/Debian)
 sudo apt-get install ffmpeg
 
@@ -78,8 +81,19 @@ brew install ffmpeg
 
 スクリプトは以下の処理を行います:
 - YouTube動画のダウンロード
+- Google Driveからエンディング動画のダウンロード
 - 指定された範囲のクリップ作成
+- 各クリップの最後にエンディング動画を自動結合
 - メタデータファイルの生成
+
+## エンディング動画について
+
+すべてのクリップには自動的にエンディング動画が追加されます。
+
+- **エンディング動画URL**: https://drive.google.com/file/d/1cn486ZQzMqYhEA1mkw8VM8QcFf4nPJ1b/view
+- 各クリップの最後に自動的に結合されます
+- ffmpegのconcat demuxerを使用して無劣化結合します
+- SHORTsを除くすべての動画に必須です（ユアユニの規約）
 
 ## ユアユニの規約について
 
