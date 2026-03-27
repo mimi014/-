@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユアユニ 自動動画制作アプリ</title>
+    <link rel="stylesheet" href="video-creator.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ユアユニ 自動動画制作アプリ</h1>
+            <p class="subtitle">YouTube切り抜き動画を簡単に作成</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Step 1: YouTube URLの入力 -->
+            <section class="card">
+                <h2>ステップ1: 動画URLを入力</h2>
+                <div class="form-group">
+                    <label for="videoUrl">YouTube動画URL:</label>
+                    <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+                    <button id="loadVideoBtn" class="btn btn-primary">動画を読み込む</button>
+                </div>
+                <div id="videoInfo" class="video-info" style="display: none;">
+                    <p><strong>動画タイトル:</strong> <span id="videoTitle"></span></p>
+                    <p><strong>チャンネル:</strong> <span id="channelName"></span></p>
+                    <p><strong>再生時間:</strong> <span id="videoDuration"></span></p>
+                </div>
+            </section>
+
+            <!-- Step 2: ビデオプレビューとクリップ選択 -->
+            <section class="card">
+                <h2>ステップ2: クリップ範囲を選択</h2>
+                <div class="video-container">
+                    <div id="videoPlayer" class="video-player"></div>
+                </div>
+
+                <div class="clip-controls">
+                    <div class="form-group">
+                        <label for="startTime">開始時間 (秒):</label>
+                        <input type="number" id="startTime" min="0" value="0" />
+                        <button id="setStartBtn" class="btn btn-secondary">現在位置を設定</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endTime">終了時間 (秒):</label>
+                        <input type="number" id="endTime" min="0" value="0" />
+                        <button id="setEndBtn" class="btn btn-secondary">現在位置を設定</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>クリップ長:</label>
+                        <span id="clipDuration">0秒</span>
+                    </div>
+                </div>
+
+                <div class="clip-list">
+                    <h3>追加されたクリップ</h3>
+                    <div id="clipItems"></div>
+                    <button id="addClipBtn" class="btn btn-success">クリップを追加</button>
+                </div>
+            </section>
+
+            <!-- Step 3: メタデータ入力 -->
+            <section class="card">
+                <h2>ステップ3: 動画情報を入力</h2>
+
+                <div class="form-group">
+                    <label for="clipTitle">切り抜き動画のタイトル:</label>
+                    <input type="text" id="clipTitle" placeholder="例: 【竹花貴騎】ビジネスで成功する方法" />
+                </div>
+
+                <div class="form-group">
+                    <label for="clipDescription">動画の説明:</label>
+                    <textarea id="clipDescription" rows="5" placeholder="動画の内容を詳しく説明してください...&#10;&#10;※元動画: [元動画のURL]&#10;※チャンネル: [元チャンネル名]"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="yourChannelName">あなたのチャンネル名:</label>
+                    <input type="text" id="yourChannelName" placeholder="例: 【公認切り抜き】〇〇の名前" />
+                    <small>※ 竹花貴騎氏の公認切り抜きであることを明記してください</small>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="commentEnabled" checked />
+                        コメント欄を有効にする（必須）
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>動画カテゴリ:</label>
+                    <select id="videoCategory">
+                        <option value="education">教育</option>
+                        <option value="business">ビジネス</option>
+                        <option value="howto">ハウツー</option>
+                        <option value="people">人物・ブログ</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Step 4: 確認と出力 -->
+            <section class="card">
+                <h2>ステップ4: 確認と出力</h2>
+
+                <div class="rules-checklist">
+                    <h3>禁止事項の確認</h3>
+                    <label><input type="checkbox" class="rule-check" /> サムネやタイトルで他人の数字や実績を使用していない</label>
+                    <label><input type="checkbox" class="rule-check" /> 竹花氏のインスタリール動画やYouTubeで公開しているショート動画は収益化対象外と理解している</label>
+                    <label><input type="checkbox" class="rule-check" /> 必ず自身で動画を視聴して、学んだまたは検証した部分を切り抜いている</label>
+                    <label><input type="checkbox" class="rule-check" /> エイプリルフールで出した嘘過ぎる「除籍」「許可」「違法」などの文言は使用していない</label>
+                    <label><input type="checkbox" class="rule-check" /> 同じ切り抜き動画を同時に2つ以上の動画で収益化していない</label>
+                    <label><input type="checkbox" class="rule-check" /> 全動画で5分以上の長さがある（SHORTsを除く）</label>
+                    <label><input type="checkbox" class="rule-check" /> 他人の動画・ブログを転載していない</label>
+                </div>
+
+                <div class="button-group">
+                    <button id="generateJsonBtn" class="btn btn-primary">設定をJSON出力</button>
+                    <button id="generateScriptBtn" class="btn btn-success">スクリプトを生成</button>
+                    <button id="resetBtn" class="btn btn-danger">リセット</button>
+                </div>
+
+                <div id="outputSection" style="display: none;">
+                    <h3>出力結果</h3>
+                    <pre id="outputContent"></pre>
+                    <button id="copyOutputBtn" class="btn btn-secondary">クリップボードにコピー</button>
+                </div>
+            </section>
+
+            <!-- エンディング動画情報 -->
+            <section class="card info-box" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 4px solid #ff9800;">
+                <h2>エンディング動画について</h2>
+                <p style="margin-bottom: 10px;">
+                    <strong>すべてのクリップには自動的にエンディング動画が追加されます</strong>
+                </p>
+                <ul>
+                    <li>エンディング動画はGoogle Driveからダウンロードされます</li>
+                    <li>各クリップの最後に自動的に結合されます</li>
+                    <li>エンディング動画URL: <a href="https://drive.google.com/file/d/1cn486ZQzMqYhEA1mkw8VM8QcFf4nPJ1b/view" target="_blank">Google Driveで確認</a></li>
+                    <li><strong>必要なツール:</strong> gdown (pip install gdown)</li>
+                </ul>
+            </section>
+
+            <!-- 申請情報 -->
+            <section class="card info-box">
+                <h2>報酬申請について</h2>
+                <ul>
+                    <li>各条件を満たしていることを確認して報酬申請してください</li>
+                    <li>担当レビュー後に、クラスタ口座登録がない場合は報酬は振込ませんまた理由説明の個別計算を撤かも受け付けません</li>
+                    <li>毎月月末締め、翌月5日以前申請、月末ご出月間の提出期限。</li>
+                    <li><strong>報酬の申請方法:</strong> 専用フォームから申請してください</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <script src="video-creator.js"></script>
+</body>
+</html>
